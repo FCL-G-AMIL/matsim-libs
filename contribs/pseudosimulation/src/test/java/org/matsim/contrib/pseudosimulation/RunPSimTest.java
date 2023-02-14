@@ -77,7 +77,7 @@ public class RunPSimTest {
 			if( !selectorNames.contains( settings.getStrategyName() ) ){
 				logger.warn( settings.getStrategyName() );
 				settings.setWeight( settings.getWeight() * 20 );
-				settings.setDisableAfter( 18 );
+//				settings.setDisableAfter( 18 );
 			}
 		}
 		// yyyyyy I think that the above also includes the selector strategies.  ??
