@@ -57,40 +57,24 @@ public class MobSimSwitcher implements IterationEndsListener,
 	public void notifyIterationStarts(IterationStartsEvent event) {
 		if (determineIfQSimIter(event.getIteration())) {
 			LogManager.getLogger(this.getClass()).warn("Running full queue simulation");
-
 		} else {
 			LogManager.getLogger(this.getClass()).info("Running PSim");
 			plancatcher.init();
-			for (Person person : scenario.getPopulation().getPersons().values()) {
-					plancatcher.addPlansForPsim(person.getSelectedPlan());
-			}
+			scenario.getPopulation().getPersons().values().forEach(person -> plancatcher.addPlansForPsim(person.getSelectedPlan()));
 
 		}
 	}
 
 	private boolean determineIfQSimIter(int iteration) {
-
-		if (iteration == scenario.getConfig().controler().getLastIteration() || iteration == scenario.getConfig().controler().getFirstIteration() ) {
-			isQSimIteration = true;
-			return isQSimIteration;
-		}
-		if (isQSimIteration && psimIterationCount == 0) {
-			isQSimIteration = false;
-			psimIterationCount++;
-			return isQSimIteration;
-		}
-		if (psimIterationCount >= iterationsPerCycle - 1) {
-			isQSimIteration = true;
-			qsimIters.add(iteration);
-			psimIterationCount = 0;
-			return isQSimIteration;
-		}
-		if (isQSimIteration) {
-			qsimIters.add(iteration);
-		} else {
-			psimIterationCount++;
-
-		}
+		isQSimIteration = iteration == scenario.getConfig().controler().getLastIteration() || iteration == scenario.getConfig().controler().getFirstIteration();
+		if (isQSimIteration)
+			if (psimIterationCount == 0) {
+				isQSimIteration = false;
+				psimIterationCount++;
+			} else if (psimIterationCount >= iterationsPerCycle - 1) {
+				qsimIters.add(iteration);
+				psimIterationCount = 0;
+			}
 		return isQSimIteration;
 	}
 
@@ -100,18 +84,12 @@ public class MobSimSwitcher implements IterationEndsListener,
 		if (this.isQSimIteration())
 			return;
 
-		for (Person person : scenario.getPopulation().getPersons().values()) {
-				plancatcher.removeExistingPlanOrAddNewPlan(person.getSelectedPlan());
-		}
+		scenario.getPopulation().getPersons().values().forEach(person -> plancatcher.removeExistingPlanOrAddNewPlan(person.getSelectedPlan()));
 
 		selectedPlanScoreMemory = new HashMap<>(scenario.getPopulation().getPersons().size());
 
-		for (Person person : scenario.getPopulation().getPersons().values()) {
-			selectedPlanScoreMemory.put(person.getId(), person.getSelectedPlan().getScore());
-		}
-		for (Plan plan : plancatcher.getPlansForPSim()) {
-			selectedPlanScoreMemory.remove(plan.getPerson().getId());
-		}
+		scenario.getPopulation().getPersons().values().forEach(person -> selectedPlanScoreMemory.put(person.getId(), person.getSelectedPlan().getScore()));
+		plancatcher.getPlansForPSim().forEach(plan -> selectedPlanScoreMemory.remove(plan.getPerson().getId()));
 
 	}
 
@@ -120,11 +98,7 @@ public class MobSimSwitcher implements IterationEndsListener,
 	public void notifyIterationEnds(IterationEndsEvent event) {
 		if (this.isQSimIteration())
 			return;
-		Iterator<Map.Entry<Id<Person>, Double>> iterator = selectedPlanScoreMemory.entrySet().iterator();
-		while (iterator.hasNext()) {
-			Map.Entry<Id<Person>, Double> entry = iterator.next();
-			scenario.getPopulation().getPersons().get(entry.getKey()).getSelectedPlan().setScore(entry.getValue());
-		}
+		selectedPlanScoreMemory.forEach((key, value) -> scenario.getPopulation().getPersons().get(key).getSelectedPlan().setScore(value));
 	}
 
 }
