@@ -21,17 +21,17 @@ public class PSimConfigGroup extends ReflectiveConfigGroup {
 	}
 
 	@StringSetter(ITERATIONS_PER_CYCLE)
-	public  void setIterationsPerCycle(int iterationsPerCycle) {
+	public void setIterationsPerCycle(int iterationsPerCycle) {
 		this.iterationsPerCycle = iterationsPerCycle;
 	}
 
 	@StringGetter(FULL_TRANSIT_PERFORMANCE_TRANSMISSION)
-	public  boolean isFullTransitPerformanceTransmission() {
+	public boolean isFullTransitPerformanceTransmission() {
 		return fullTransitPerformanceTransmission;
 	}
 
 	@StringSetter(FULL_TRANSIT_PERFORMANCE_TRANSMISSION)
-	public  void setFullTransitPerformanceTransmission(boolean fullTransitPerformanceTransmission) {
+	public void setFullTransitPerformanceTransmission(boolean fullTransitPerformanceTransmission) {
 		this.fullTransitPerformanceTransmission = fullTransitPerformanceTransmission;
 	}
 

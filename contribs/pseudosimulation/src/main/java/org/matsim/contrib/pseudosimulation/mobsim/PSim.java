@@ -76,11 +76,11 @@ public class PSim implements Mobsim {
     private final TravelTime carLinkTravelTimes;
     private final Collection<Plan> plans;
     private final double endTime;
-    
+
     // Encapsulates TransitPerformance, WaitTime, StopStopTime, ...
     private TransitEmulator transitEmulator = null;
     private Set<String> transitModes = new LinkedHashSet<>();
-    
+
     public PSim(Scenario sc, EventsManager eventsManager, Collection<Plan> plans, TravelTime carLinkTravelTimes) {
         LogManager.getLogger(getClass()).warn("Constructing PSim");
         this.scenario = sc;
@@ -227,7 +227,7 @@ public class PSim implements Mobsim {
                          */
                         PersonArrivalEvent arrivalEvent = new PersonArrivalEvent( arrivalTime, personId, act.getLinkId(), prevLeg.getMode() );
                         eventQueue.add( arrivalEvent );
-                        ActivityStartEvent startEvent = new ActivityStartEvent( arrivalTime, personId, act.getLinkId(), act.getFacilityId(), act.getType() );
+						ActivityStartEvent startEvent = new ActivityStartEvent(arrivalTime, personId, act.getLinkId(), act.getFacilityId(), act.getType(), act.getCoord());
                         eventQueue.add( startEvent );
                     }
 
@@ -236,8 +236,8 @@ public class PSim implements Mobsim {
                          * This is not the last activity, send activity end and
                          * departure events.
                          */
-                        Leg nextLeg = (Leg) elements.get( idx + 1 );
-                        ActivityEndEvent endEvent = new ActivityEndEvent( actEndTime, personId, act.getLinkId(), act.getFacilityId(), act.getType() );
+						Leg nextLeg = (Leg) elements.get(idx + 1);
+						ActivityEndEvent endEvent = new ActivityEndEvent(actEndTime, personId, act.getLinkId(), act.getFacilityId(), act.getType(), act.getCoord());
                         eventQueue.add( endEvent );
                         PersonDepartureEvent departureEvent = new PersonDepartureEvent( actEndTime, personId, act.getLinkId(), nextLeg.getMode(), TripStructureUtils.getRoutingMode(nextLeg) );
 
