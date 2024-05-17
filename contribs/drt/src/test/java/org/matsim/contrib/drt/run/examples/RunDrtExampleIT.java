@@ -90,7 +90,7 @@ public class RunDrtExampleIT {
 
 		for (var drtCfg : MultiModeDrtConfigGroup.get(config).getModalElements()) {
 			//disable rejections
-			drtCfg.rejectRequestIfMaxWaitOrTravelTimeViolated = false;
+            drtCfg.getDrtOptimizationConstraintsParam().rejectRequestIfMaxWaitOrTravelTimeViolated = false;
 		}
 
 		config.controller().setOverwriteFileSetting(OverwriteFileSetting.deleteDirectoryIfExists);
@@ -129,7 +129,7 @@ public class RunDrtExampleIT {
 			drtCfg.addParameterSet(selectiveInsertionSearchParams);
 
 			//disable rejections
-			drtCfg.rejectRequestIfMaxWaitOrTravelTimeViolated = false;
+            drtCfg.getDrtOptimizationConstraintsParam().rejectRequestIfMaxWaitOrTravelTimeViolated = false;
 		}
 
 		config.controller().setOverwriteFileSetting(OverwriteFileSetting.deleteDirectoryIfExists);
@@ -168,7 +168,7 @@ public class RunDrtExampleIT {
 			drtCfg.addParameterSet(repeatedSelectiveInsertionSearchParams);
 
 			//disable rejections
-			drtCfg.rejectRequestIfMaxWaitOrTravelTimeViolated = false;
+            drtCfg.getDrtOptimizationConstraintsParam().rejectRequestIfMaxWaitOrTravelTimeViolated = false;
 		}
 
 		config.controller().setLastIteration(3);
@@ -236,9 +236,9 @@ public class RunDrtExampleIT {
 		var expectedStats = Stats.newBuilder()
 				.rejectionRate(0.05)
 				.rejections(17)
-				.waitAverage(260.41)
-				.inVehicleTravelTimeMean(374.87)
-				.totalTravelTimeMean(635.28)
+				.waitAverage(260.24)
+				.inVehicleTravelTimeMean(375.14)
+				.totalTravelTimeMean(635.38)
 				.build();
 
 		verifyDrtCustomerStatsCloseToExpectedStats(utils.getOutputDirectory(), expectedStats);
@@ -271,9 +271,9 @@ public class RunDrtExampleIT {
 		var expectedStats = Stats.newBuilder()
 				.rejectionRate(0.05)
 				.rejections(17)
-				.waitAverage(261.88)
-				.inVehicleTravelTimeMean(376.04)
-				.totalTravelTimeMean(637.93)
+				.waitAverage(261.71)
+				.inVehicleTravelTimeMean(376.32)
+				.totalTravelTimeMean(638.03)
 				.build();
 
 		verifyDrtCustomerStatsCloseToExpectedStats(utils.getOutputDirectory(), expectedStats);
@@ -294,8 +294,8 @@ public class RunDrtExampleIT {
 		var expectedStats = Stats.newBuilder()
 				.rejectionRate(0.02)
 				.rejections(9)
-				.waitAverage(224.56)
-				.inVehicleTravelTimeMean(392.65)
+				.waitAverage(224.46)
+				.inVehicleTravelTimeMean(392.74)
 				.totalTravelTimeMean(617.21)
 				.build();
 
@@ -393,7 +393,7 @@ public class RunDrtExampleIT {
 	 * rejectionRate, rejections, waitAverage, inVehicleTravelTimeMean, & totalTravelTimeMean
 	 */
 
-	private void verifyDrtCustomerStatsCloseToExpectedStats(String outputDirectory, Stats expectedStats) {
+	 static void verifyDrtCustomerStatsCloseToExpectedStats(String outputDirectory, Stats expectedStats) {
 
 		String filename = outputDirectory + "/drt_customer_stats_drt.csv";
 
@@ -424,7 +424,7 @@ public class RunDrtExampleIT {
 		assertThat(actualStats).usingRecursiveComparison().isEqualTo(expectedStats);
 	}
 
-	private static class Stats {
+	static class Stats {
 		private final double rejectionRate;
 		private final double rejections;
 		private final double waitAverage;
