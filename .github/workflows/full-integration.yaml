@@ -2,7 +2,7 @@ name: full-integration
 
 on:
   workflow_dispatch:
-  schedule:
+  #schedule:
     #- cron: '30 0 * * *' # daily at 0:30 UTC
 
 jobs:
